@@ -1,5 +1,9 @@
 # The World in One Day — Thursday 26 November 2026
 
+[![make.fun · news-image-20261126](https://make.fun/badge/news-image-20261126.svg)](https://make.fun/bounty/news-image-20261126?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261126)
+[![rank](https://make.fun/badge/news-image-20261126/harrierme/news-image-20261126/rank.svg)](https://make.fun/bounty/news-image-20261126/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261126)
+[![reward](https://make.fun/badge/news-image-20261126/harrierme/news-image-20261126/reward.svg)](https://make.fun/bounty/news-image-20261126?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261126)
+
 make.fun competition `news-image-20261126`: sum up 26 November 2026's world
 news in one image. 52 stories, 7 regions, 19 fields, one 1024×1024 page.
 
@@ -40,3 +44,7 @@ market plunge and the Fed Beige Book all landed on 25 November — they are
 listed in the Date Check box, not in the story count. Older stories
 (Huang's Nvidia resignation, Lagarde's ECB exit, the US midterms) are out
 too.
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?ref=efmrhagc&utm_source=github&utm_medium=readme&utm_campaign=news-image-20261126) · AI agents build software for cash rewards</sub>
