@@ -4,11 +4,11 @@ PNG newspaper front page. All 40 stories were researched first (see stories.md);
 every illustration is drawn here with Pillow, no photos, no network, no fonts
 downloaded at run time. Deterministic: same input, same bytes every run.
 
-Round 2 (26 Nov 2026): 5 date-wrong stories replaced with verified 26 Nov news,
-total cut 52 -> 40, UTC strip added, trunc() removed (all text pre-shortened
-in the data so nothing is ever cut mid-word), DATE CHECK fixed (15 discarded
-+ 2 Not yet), numbers strip rebuilt as 6 verified cells, map legend added,
-data labels added inside lead illustrations."""
+Round 3 (26 Nov 2026): 22 briefs replaced with individually verified
+26 Nov news (old briefs' dates were 4-25 Nov), region count 7 -> 6
+(no verified Middle East story on 26 Nov), map pins spread with
+leader-lines, numbers label "15% Taiwan tariff rate kept" corrected
+to "confident", README updated to final counts."""
 
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -114,36 +114,35 @@ CARDS = [
 # (num, place, headline) - one line each; every line pre-shortened to fit
 BRIEFS = [
     (15, "Hanoi", "Vietnam to finish US trade deal soon"),
-    (16, "New Delhi", "India unveils Nepal aid package"),
-    (17, "New Delhi", "India urges human control of AI weapons"),
-    (18, "New Delhi", "India condemns Riyadh tower attack"),
-    (19, "Bengaluru", "Flipkart chief to step down in December"),
+    (16, "Bogor", "Indonesia mine rescue resumes"),
+    (17, "New Delhi", "Uber names Ranjan India chief"),
+    (18, "Brussels", "EU leaders open two-day summit"),
+    (19, "Detroit", "NFL triple-header on Thanksgiving"),
     (20, "New York", "Some brands sit out Black Friday deals"),
     (21, "Punjab", "Farmers sell stubble, cutting fires"),
-    (22, "Washington", "AG dodges questions on Nvidia inquiry"),
-    (23, "Gaza", "Israeli strike kills Hamas official"),
-    (24, "Luxembourg", "EU court rules on caged animals"),
-    (25, "Moscow", "Russia's military budget surges"),
-    (26, "Brussels", "EU Parliament advances budget plans"),
-    (27, "Brussels", "3.7m European industrial jobs at risk"),
-    (28, "Kinshasa", "DRC enacts constitutional reform law"),
-    (29, "Sao Tome", "PM Americo Ramos reappointed"),
-    (30, "Lagos", "Nigeria starts building naval ships"),
-    (31, "Johannesburg", "Police bar anti-migrant rallies"),
-    (32, "Nairobi", "Kenya secures 293,600 Saudi jobs"),
-    (33, "Ranchi", "Police detain tree-cutting protesters"),
-    (34, "Juba", "Awar Odhiang named model of the year"),
-    (35, "Lagos", "Tyla, Tems, Kidjo lead Grammy hopes"),
-    (36, "Bogota", "UN chief praises Colombia peace progress"),
-    (37, "Brasilia", "Wolbachia mosquitoes cut viruses 68%"),
+    (22, "Charlotte", "Bulls edge Hornets 107-105"),
+    (23, "Raleigh", "NC State beats Norfolk St 80-49"),
+    (24, "Pyongyang", "Kim hails tactical nuclear push"),
+    (25, "London", "BBC-Met Office weather deal live"),
+    (26, "London", "UK to publish EU treaties today"),
+    (27, "Washington", "Capitals rout Flyers 7-3"),
+    (28, "Buffalo", "Sabres top Rangers 5-1"),
+    (29, "Boston", "Jets beat Bruins 4-2"),
+    (30, "London", "UK to create stalking offence"),
+    (31, "Detroit", "Detroit's 100th parade steps off"),
+    (32, "Moscow, Idaho", "Pastor wants women's vote repealed"),
+    (33, "Bavaria", "Guitar wars over Stratocaster"),
+    (34, "Las Vegas", "Players Era semis tip off today"),
+    (35, "Paris", "France mainstream faces vote wipeout"),
+    (36, "London", "Parents feel pressure to be perfect"),
+    (37, "Mogadishu", "Jihadism 'changing shape', BBC finds"),
     (38, "Philadelphia", "LeBron's first 76ers triple-double"),
-    (39, "Bahamas", "Xavier edges Texas A&M 88-83"),
-    (40, "Lincoln", "Nebraska tops 100 again"),
+    (39, "Buenos Aires", "Argentina Senate votes on PASO reform"),
+    (40, "New York", "Knicks beat Cavaliers 121-102"),
 ]
 
-REGIONS = [("NORTH AMERICA", 9), ("SOUTH AMERICA", 2), ("EUROPE", 6),
-           ("AFRICA", 7), ("MIDDLE EAST", 2), ("SOUTH ASIA", 6),
-           ("ASIA-PACIFIC", 8)]
+REGIONS = [("NORTH AMERICA", 16), ("SOUTH AMERICA", 1), ("EUROPE", 9),
+           ("AFRICA", 1), ("SOUTH ASIA", 3), ("ASIA-PACIFIC", 10)]
 
 # (time UTC, event) - 7 slots, all 26 Nov 2026
 UTC_STRIP = [
@@ -161,7 +160,7 @@ NUMBERS = [("3.25%", "Bank of Korea rate"), ("20%", "top US tariff proposed"),
            ("100th", "Macy's parade (postponed)"),
            ("510", "free pulls, Azur Promilia launch"),
            ("$2.5m", "chess title prize fund"),
-           ("15%", "Taiwan tariff rate kept")]
+           ("15%", "Taiwan confident of keeping 15%")]
 
 # 15 discarded (wrong date) + 2 not yet; every line pre-shortened to fit
 DATE_CHECK = [
@@ -190,7 +189,9 @@ MAP_LEGEND = [
 ]
 
 SOURCES = ("Sources: Reuters, BBC, AP, AFP, FIDE, UEFA, NBC, Nexon, Yostar, "
-           "Bank of Korea, USTR, JETRO, NY Fed, Govt of India, PIA. Labels: "
+           "Bank of Korea, USTR, JETRO, NY Fed, Govt of India, PIA, KCNA, NHL, "
+           "NCAA.com, USA Today, Bloomberg, Guardian, PA, Independent, "
+           "Detroit Free Press, Sportradar. Labels: "
            "CONFIRMED = verified by the named source; REPORTED = as reported; "
            "OFFICIAL = announced by an authority; FORECAST = scheduled. "
            "All illustrations drawn for this page — no photographs.")
@@ -233,6 +234,10 @@ def scene(kind, w, h):
         d.rectangle([8, h - 26, w - 8, h - 12], fill=(30, 40, 56))  # hull
         for i, c in enumerate([(158, 26, 26), (28, 68, 110), (176, 132, 40)]):
             d.rectangle([16 + i * 34, h - 52, 44 + i * 34, h - 26], fill=c)
+        # tariff ceilings on the containers: 20% / 15% / 40% (USTR proposal)
+        for i, lab in enumerate(["20%", "15%", "40%"]):
+            d.text((30 + i * 34, h - 39), lab, font=F(8, bold=True),
+                   fill=(255, 255, 255), anchor="mm")
         d.rectangle([w - 34, h - 66, w - 18, h - 52], fill=(240, 240, 235))  # bridge
         d.line([8, h - 12, w - 8, h - 12], fill=(247, 243, 234), width=2)
     elif kind == "parade":
@@ -245,6 +250,7 @@ def scene(kind, w, h):
             d.ellipse([bx - 15, by - 12, bx + 15, by + 12], fill=c)
             d.line([bx, by + 12, bx, by + 30], fill=INK, width=1)
         d.ellipse([cx - 12, 52, cx + 12, 74], fill=(240, 240, 235))  # balloon
+        d.text((cx, 63), "100", font=F(9, bold=True), fill=RED, anchor="mm")
         d.line([cx, 74, cx, 92], fill=INK, width=1)
     elif kind == "bank":
         _sky(d, (0, 0, w, h), (200, 205, 190), (150, 150, 130))
@@ -254,6 +260,10 @@ def scene(kind, w, h):
             d.rectangle([22 + i * 30, 52, 34 + i * 30, h - 14], fill=(240, 240, 235))
         d.rectangle([16, h - 14, w - 16, h - 8], fill=(90, 84, 74))
         d.text((cx, 56), "%", font=F(26, bold=True), fill=RED, anchor="mt")
+        # rising rate line above the roof (hike to 3.25%)
+        d.line([(8, 18), (18, 14), (28, 10), (38, 6)], fill=RED, width=2)
+        d.line([(38, 6), (32, 5)], fill=RED, width=2)
+        d.line([(38, 6), (36, 12)], fill=RED, width=2)
     elif kind == "tv":
         _sky(d, (0, 0, w, h), (190, 195, 205), (140, 145, 155))
         d.rectangle([18, 30, w - 18, h - 34], fill=(30, 40, 56))
@@ -441,7 +451,7 @@ def draw_masthead(d):
            fill=INK)
     d.text((W - M, 30), "Thursday, 26 November 2026",
            font=F(19, serif=True, bold=True), fill=INK, anchor="ra")
-    d.text((W - M, 54), "40 STORIES  ·  7 REGIONS  ·  18 FIELDS",
+    d.text((W - M, 54), "40 STORIES  ·  6 REGIONS  ·  18 FIELDS",
            font=F(12, bold=True), fill=RED, anchor="ra")
     rule(d, 84, 2)
     rule(d, 88, 1)
@@ -583,8 +593,12 @@ def build():
     pins = [(num, lat, lon) for num, tag, head, summ, kind, lat, lon, *rest
             in LEADS] + [(num, lat, lon) for num, tag, head, summ, kind, lat, lon
                          in CARDS]
-    # leader-line offsets where pins would cover each other (same city)
-    leaders = {2: (-16, 10), 14: (16, -12)}
+    # leader-line offsets where pins would cover each other (same city,
+    # or clusters: Geneva/London/Brussels within ~9px, Washington/New York/
+    # Chicago within ~15px, Taipei/Shanghai/Hong Kong/Seoul within ~13px)
+    leaders = {2: (-16, 10), 14: (16, -12), 4: (-20, -14),
+               10: (-22, 16), 11: (2, -20), 13: (22, 10),
+               1: (0, 18), 6: (-16, 10), 7: (2, -20), 12: (6, -22)}
     draw_map(d, (M, my + 18, M + mw, my + 158), pins, leaders)
     ly0 = my + 162
     for ln in MAP_LEGEND:
